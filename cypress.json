@@ -1,0 +1,17 @@
+{
+  "baseUrl": "https://appv1.convertwork.cn",
+  "viewportWidth": 1800,
+  "viewportHeight": 1260,
+  "projectId": "citbmu",
+  "chromeWebSecurity": false,
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "cypress/reports/my-test-output[hash].xml",
+    "toConsole": true
+  },
+  "testFiles": "**/*.spec.ts",
+  "retries": {
+    "runMode": 3,
+    "openMode": 0
+  }
+}

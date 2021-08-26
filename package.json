@@ -1,0 +1,31 @@
+{
+  "name": "ana-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "record": "npx cypress run --record --key 3f44ae77-e0ad-4f95-b070-c92585505b8f",
+    "cypress": "cypress run --headless",
+    "test": "./node_modules/.bin/cypress run",
+    "prepare": "husky install",
+    "husky:pre-commit": "node .husky/pre-commit.js",
+    "husky:commit-msg": "node .husky/commit-msg.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commitlint": "^13.1.0",
+    "cypress": "^8.1.0",
+    "lint-staged": "^11.1.2",
+    "typescript": "^4.3.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "@cypress/code-coverage": "^3.9.10",
+    "husky": "^7.0.2",
+    "prettier": "^2.3.2",
+    "shelljs": "^0.8.4"
+  }
+}
