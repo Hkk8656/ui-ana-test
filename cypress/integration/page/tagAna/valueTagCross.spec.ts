@@ -42,16 +42,10 @@ describe('值标签交叉 - 查询', () => {
 
   afterEach(() => {});
 
-  it('文本 不支持区间', () => {
-    addTag('text');
-    onSettingClick(0);
-    cy.contains('区间范围自定义').find('input').should('be.disabled');
-  });
-
-  it('数值 支持区间', () => {
-    addTag('number');
-    onSettingClick(0);
-    cy.contains('区间范围自定义').find('input').should('not.be.disabled');
+  it('至多支持三个维度', () => {
+    cy.get('.ant-col-20').find('.ant-btn').click();
+    cy.get('.ant-col-20').find('.ant-btn').click();
+    cy.get('.ant-col-20').get('button>.anticon-plus-circle-o').should('not.exist');
   });
 
   it('文本、数值类型 默认离散 查询', () => {
@@ -72,62 +66,78 @@ describe('值标签交叉 - 查询', () => {
     showBar();
   });
 
-  it('文本 特定值 查询', () => {
-    addTag('text');
-    onSettingClick(0);
-    cy.get('.ant-checkbox-wrapper').click();
-    VALUES.map((v) => {
-      cy.get('.ant-select-selection--multiple').click().type(`${v}{enter}`);
+  describe.only('数值类型', () => {
+    it('支持离散、特定值、区间', () => {
+      addTag('number');
+      onSettingClick(0);
+      cy.contains('区间范围自定义').find('input').should('not.be.disabled');
+      cy.contains('离散统计').find('input').should('not.be.disabled');
+      cy.contains('选择特定值').find('input').should('not.be.disabled');
     });
-    onSearch();
-    injectSearchApi();
-    checkSaveApi([
-      {
-        ...textTag,
-        dimType: DimType.VALUE,
-        values: VALUES,
-      },
-    ]);
-    showBar();
+    it('特定值 查询', () => {
+      addTag('number');
+      onSettingClick(0);
+      cy.get('.ant-checkbox-wrapper').click();
+      VALUES.map((v) => {
+        cy.get('.ant-select-selection--multiple').click().type(`${v}{enter}`);
+      });
+      onSearch();
+      injectSearchApi();
+      checkSaveApi([
+        {
+          ...numTag,
+          dimType: DimType.VALUE,
+          values: VALUES,
+        },
+      ]);
+      showBar();
+    });
+
+    it('区间 查询', () => {
+      addTag('number');
+      onSettingClick(0);
+      cy.contains('区间范围自定义').click();
+      cy.contains('添加区间').click();
+      VALUES.map((v, index) => {
+        cy.get('.ant-input-number-input-wrap').eq(index).clear().type(v);
+      });
+      onSearch();
+      injectSearchApi();
+      checkSaveApi([
+        {
+          ...numTag,
+          dimType: DimType.RANGE,
+          values: VALUES,
+        },
+      ]);
+      showBar();
+    });
   });
 
-  it('数值 特定值 查询', () => {
-    addTag('number');
-    onSettingClick(0);
-    cy.get('.ant-checkbox-wrapper').click();
-    VALUES.map((v) => {
-      cy.get('.ant-select-selection--multiple').click().type(`${v}{enter}`);
+  describe('文本类型', () => {
+    it('不支持区间', () => {
+      addTag('text');
+      onSettingClick(0);
+      cy.contains('区间范围自定义').find('input').should('be.disabled');
     });
-    onSearch();
-    injectSearchApi();
-    checkSaveApi([
-      {
-        ...numTag,
-        dimType: DimType.VALUE,
-        values: VALUES,
-      },
-    ]);
-    showBar();
-  });
-
-  it('数值 区间 查询', () => {
-    addTag('number');
-    onSettingClick(0);
-    cy.contains('区间范围自定义').click();
-    cy.contains('添加区间').click();
-    VALUES.map((v, index) => {
-      cy.get('.ant-input-number-input-wrap').eq(index).clear().type(v);
+    it('特定值 查询', () => {
+      addTag('text');
+      onSettingClick(0);
+      cy.get('.ant-checkbox-wrapper').click();
+      VALUES.map((v) => {
+        cy.get('.ant-select-selection--multiple').click().type(`${v}{enter}`);
+      });
+      onSearch();
+      injectSearchApi();
+      checkSaveApi([
+        {
+          ...textTag,
+          dimType: DimType.VALUE,
+          values: VALUES,
+        },
+      ]);
+      showBar();
     });
-    onSearch();
-    injectSearchApi();
-    checkSaveApi([
-      {
-        ...numTag,
-        dimType: DimType.RANGE,
-        values: VALUES,
-      },
-    ]);
-    showBar();
   });
 });
 
