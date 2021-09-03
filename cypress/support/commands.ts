@@ -26,16 +26,22 @@
 let Session = { value: '' };
 
 function login() {
-  cy.visit('/login.html');
-  cy.get('#username').type('24');
-  cy.get('#password').type('Nobug1234@');
-  cy.contains('登 录').click();
+  // cy.visit('/login.html');
+  // cy.get('#username').type('24');
+  // cy.get('#password').type('Nobug1234@');
+  // cy.contains('登 录').click();
 
   cy.request({
-    method: 'PUT',
-    url: '/multidept/selectCurrentDept?deptCode=A00001',
+    method: 'POST',
+    url: '/perform_login?username=24&password=Nobug1234@',
+    form: true,
   }).then(() => {
-    cy.visit('/application/ana/index.html');
+    cy.request({
+      method: 'PUT',
+      url: '/multidept/selectCurrentDept?deptCode=A00001',
+    }).then(() => {
+      cy.visit('/application/ana/index.html');
+    });
   });
 
   Cypress.on('uncaught:exception', (err) => {

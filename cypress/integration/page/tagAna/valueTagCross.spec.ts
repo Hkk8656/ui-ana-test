@@ -58,23 +58,31 @@ const numTagValues2 = ['1000', '1200'];
 
 let dimensionLength = 0;
 describe('值标签交叉 - 查询', () => {
-  before(() => {});
-  beforeEach(() => {
+  before(() => {
     cy.login();
+    cy.contains('标签分析').click();
+  });
+  beforeEach(() => {
+    cy.injectSession();
+    // onCancel();
+    cy.visit('/application/ana/index.html'); //TODO: refine, keep in ana html
     cy.contains('标签分析').click();
     cy.contains('值标签交叉').click();
     dimensionLength = 0;
   });
 
-  afterEach(() => {});
+  afterEach(() => {
+    // cy.contains('离线分析').click();
+    // cy.contains('实时分析').click();
+  });
 
-  it('至多支持三个维度', () => {
+  it.only('至多支持三个维度', () => {
     cy.get('.ant-col-20').find('.ant-btn').click();
     cy.get('.ant-col-20').find('.ant-btn').click();
     cy.get('.ant-col-20').get('button>.anticon-plus-circle-o').should('not.exist');
   });
 
-  it('文本、数值类型 默认离散 查询', () => {
+  it.only('文本、数值类型 默认离散 查询', () => {
     addTag(numTag);
     addTag(textTag);
     onSearch();
@@ -266,7 +274,6 @@ describe('值标签交叉 - 查询', () => {
       numTagValues2.map((v, index) => {
         clickInPopoverWithTagName('.ant-input-number-input-wrap').eq(index).clear().type(v);
       });
-      hidePopover();
       onSearch();
       injectSearchApi();
       checkSaveApi([
@@ -470,4 +477,8 @@ function checkSaveApi(crossDimensions: CrossDimensionType[]) {
     expect(request.body.tagType).deep.equal(TAG_TYPE);
     expect(response.body.error).to.equal(undefined);
   });
+}
+
+function onCancel() {
+  cy.contains('取 消').click();
 }
